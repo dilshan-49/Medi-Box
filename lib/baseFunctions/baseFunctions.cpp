@@ -52,6 +52,10 @@ void update_time_with_check_alarm()
             }
         }
     }
+    else
+    {
+        print_line("Alarm Disabled", 2, 2, 0);
+    }
 }
 
 void ring_alarm()
@@ -210,6 +214,9 @@ void run_mode(int mode)
     else if (mode == 3)
     {
         alarm_enabled = false;
+        display.clearDisplay();
+        print_line("Alarm Disabled ", 0, 0, 2);
+        delay(1000);
     }
 }
 

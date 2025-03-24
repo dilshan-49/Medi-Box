@@ -34,7 +34,7 @@ unsigned long timeLast = 0;
 
 int current_mode = 0;
 int max_modes = 4;
-String options[] = {"1 - Set Time Zone", "2 - View Alarms", "3 - Set Alarm 2", "4 - Remove Alarm"};
+String options[] = {"1 - Set Time Zone", "2 - Set Alarm 1", "3 - Set Alarm 2", "4 - Remove Alarm"};
 DHTesp dhtSensor;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
