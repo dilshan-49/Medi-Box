@@ -1,51 +1,25 @@
 #include <baseFunctions.h>
-
-void update_time(bool mode = false) // mode = false for network time, mode = true for local time
+#include <config.h>
+void update_time()
 {
-    if (!mode)
-    {
-        struct tm timeinfo;
-        getLocalTime(&timeinfo);
 
-        char days_str[8];
-        char hours_str[8];
-        char min_str[8];
-        char sec_str[8];
+    struct tm timeinfo;
+    getLocalTime(&timeinfo);
 
-        strftime(days_str, 8, "%d", &timeinfo);
-        strftime(sec_str, 8, "%S", &timeinfo);
-        strftime(hours_str, 8, "%H", &timeinfo);
-        strftime(min_str, 8, "%M", &timeinfo);
+    char days_str[8];
+    char hours_str[8];
+    char min_str[8];
+    char sec_str[8];
 
-        hours = atoi(hours_str);
-        minutes = atoi(min_str);
-        seconds = atoi(sec_str);
-        days = atoi(days_str);
-    }
-    else
-    {
-        timeNow = millis();
-        if (timeNow - timeLast >= 1000)
-        {
-            timeLast = timeNow;
-            seconds += 1;
-            if (seconds >= 60)
-            {
-                seconds = 0;
-                minutes += 1;
-                if (minutes >= 60)
-                {
-                    minutes = 0;
-                    hours += 1;
-                    if (hours >= 24)
-                    {
-                        hours = 0;
-                        days += 1;
-                    }
-                }
-            }
-        }
-    }
+    strftime(days_str, 8, "%d", &timeinfo);
+    strftime(sec_str, 8, "%S", &timeinfo);
+    strftime(hours_str, 8, "%H", &timeinfo);
+    strftime(min_str, 8, "%M", &timeinfo);
+
+    hours = atoi(hours_str);
+    minutes = atoi(min_str);
+    seconds = atoi(sec_str);
+    days = atoi(days_str);
 }
 
 void print_time_now()
@@ -106,6 +80,59 @@ void ring_alarm()
     digitalWrite(LED_1, LOW); // turn off LED1
 }
 
+bool is_pressed(int button)
+{
+    if (button == BUTTON_UP)
+    {
+        if (up_pressed)
+        {
+            up_pressed = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (button == BUTTON_DOWN)
+    {
+        if (down_pressed)
+        {
+            down_pressed = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (button == BUTTON_SELECT)
+    {
+        if (select_pressed)
+        {
+            select_pressed = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (button == BUTTON_BACK)
+    {
+        if (back_pressed)
+        {
+            back_pressed = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return false;
+}
+
 int wait_for_button_press()
 {
     while (true)
@@ -130,14 +157,13 @@ int wait_for_button_press()
             delay(200);
             return BUTTON_BACK;
         }
-
         update_time();
     }
 }
 
 void go_to_menu()
 {
-    while (digitalRead(CANCEL) == HIGH)
+    while (digitalRead(BUTTON_BACK) == HIGH)
     {
         display.clearDisplay();
         print_line(options[current_mode], 2, 0, 0);
@@ -162,9 +188,13 @@ void go_to_menu()
             delay(200);
             run_mode(current_mode);
         }
+        else if (pressed == BUTTON_BACK)
+        {
+            delay(200);
+            break;
+        }
     }
 }
-
 void run_mode(int mode)
 {
     if (mode == 0)
@@ -183,9 +213,9 @@ void run_mode(int mode)
     }
 }
 
-void set_time()
+void set_time_zone()
 {
-    int temp_hour = hours;
+    int temp_hour = zone_hours;
     while (true)
     {
         display.clearDisplay();
@@ -207,7 +237,7 @@ void set_time()
         }
         else if (pressed == BUTTON_SELECT)
         {
-            hours = temp_hour;
+            zone_hours = temp_hour;
             delay(200);
             break;
         }
@@ -219,7 +249,7 @@ void set_time()
         }
     }
 
-    int temp_min = minutes;
+    int temp_min = zone_minutes;
     while (true)
     {
         display.clearDisplay();
@@ -229,19 +259,18 @@ void set_time()
 
         if (pressed == BUTTON_UP)
         {
-            temp_min += 1;
+            temp_min += 30;
             temp_min = temp_min % 60;
             delay(200);
         }
         else if (pressed == BUTTON_DOWN)
         {
-            temp_min -= 1;
-            temp_min = temp_min < 0 ? 59 : temp_min;
+            temp_min = temp_min < 30 ? 0 : 30;
             delay(200);
         }
         else if (pressed == BUTTON_SELECT)
         {
-            minutes = temp_min;
+            zone_minutes = temp_min;
             delay(200);
             break;
         }
@@ -252,9 +281,11 @@ void set_time()
             break;
         }
     }
-
+    UTC_OFFSET = zone_hours * 3600 + zone_minutes * 60;
+    configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
+    update_time();
     display.clearDisplay();
-    print_line("Time is Set", 0, 0, 2);
+    print_line("Time Zone Set", 0, 0, 2);
     delay(1000);
 }
 

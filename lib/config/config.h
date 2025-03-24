@@ -16,58 +16,65 @@
 #define SCREEN_ADDRESS 0x3C
 
 // Button pins
-#define BUTTON_UP 35
-#define BUTTON_DOWN 32
-#define BUTTON_SELECT 33
-#define BUTTON_BACK 34
+#define BUTTON_UP 20
+#define BUTTON_DOWN 21
+#define BUTTON_SELECT 18
+#define BUTTON_BACK 19
 
 // Sensor and other Pins
-#define DHTPIN 2
-#define BUZZER 18
-#define LED_1 15
-#define LED_2 16
+#define DHTPIN 14
+#define BUZZER 1
+#define LED_1 35
+#define LED_2 36
 
 // Other Contants
 #define NTP_SERVER "pool.ntp.org"
-#define UTC_OFFSET 0
+
 #define UTC_OFFSET_DST 0
 
 // Variables
-int n_notes = 8;
-int C = 262;
-int D = 294;
-int E = 330;
-int F = 349;
-int G = 392;
-int A = 440;
-int B = 494;
-int C_H = 523;
-int notes[] = {C, D, E, F, G, A, B, C_H};
+extern int n_notes;
+extern int C;
+extern int D;
+extern int E;
+extern int F;
+extern int G;
+extern int A;
+extern int B;
+extern int C_H;
+extern int notes[];
 
-int days = 0;
-int hours = 0;
-int minutes = 0;
-int seconds = 0;
+extern int UTC_OFFSET;
 
-bool alarm_enabled = false;
-int n_alarms = 2;
-int alarm_hours[] = {0, 0};
-int alarm_minutes[] = {1, 10};
-bool alarm_triggered[] = {false, false};
+extern int days;
+extern int hours;
+extern int minutes;
+extern int seconds;
 
-unsigned long timeNow = 0;
-unsigned long timeLast = 0;
+extern bool alarm_enabled;
+extern int n_alarms;
+extern int alarm_hours[];
+extern int alarm_minutes[];
+extern bool alarm_triggered[];
 
-int current_mode = 0;
-int max_modes = 4;
-String options[] = {"1 - Set Time", "2 - Set Alarm", "3 - Set Alarm 2", "4 - Remove Alarm"};
+extern unsigned long timeNow;
+extern unsigned long timeLast;
 
-DHTesp dhtSensor;
-Adafruit_SSD1306 display;
+extern volatile bool up_pressed;
+extern volatile bool down_pressed;
+extern volatile bool select_pressed;
+extern volatile bool back_pressed;
+
+extern int current_mode;
+extern int max_modes;
+extern String options[];
+
+extern DHTesp dhtSensor;
+extern Adafruit_SSD1306 display;
 
 // basic Functions
 void setup_all();
 void setup_display();
 void print_line(String text, int text_size, int row, int column);
-
+void reset_buttons();
 #endif // CONFIG_H

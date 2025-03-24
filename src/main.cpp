@@ -22,6 +22,7 @@ void setup()
   print_line("Connected to WiFi", 2, 0, 0);
 
   configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
+  reset_buttons();
 }
 
 void loop()
@@ -30,6 +31,7 @@ void loop()
   if (digitalRead(BUTTON_BACK) == LOW)
   {
     delay(1000);
+    reset_buttons();
     Serial.println("Menu");
     go_to_menu();
   }
