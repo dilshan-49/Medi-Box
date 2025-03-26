@@ -7,7 +7,7 @@ int snooze_duration = 2;
 bool snoozed = false;
 int snoozed_alarm[2] = {0, 0};
 
-void print_time_now()
+void print_time_now() // Updating time in the home Screen
 {
     display.clearDisplay();
     char formatted_days[3];
@@ -15,6 +15,7 @@ void print_time_now()
     char formatted_minutes[3];
     char formatted_seconds[3];
 
+    // Formatting time
     sprintf(formatted_days, "%02d", days);
     sprintf(formatted_hours, "%02d", hours);
     sprintf(formatted_minutes, "%02d", minutes);
@@ -32,7 +33,7 @@ void print_time_now()
 void check_alarm()
 {
 
-    for (int i = 0; i < n_alarms; i++) // iterating through all alarms
+    for (int i = 0; i < n_alarms; i++) // checking all alarms
     {
         if (alarm_hours[i] == hours && alarm_minutes[i] == minutes && !alarm_triggered[i] && alarm_enabled[i])
         {
@@ -91,7 +92,7 @@ void ring_alarm(int alarm)
     digitalWrite(LED_1, LOW); // turn off LED1
 }
 
-void snooze_alarm(int alarm)
+void snooze_alarm(int alarm) // Snoozing the alarms which missed user confirmation
 {
     int snooze_minute = (alarm_minutes[alarm] + snooze_duration);
     int snooze_hour = alarm_hours[alarm];
@@ -109,7 +110,7 @@ void snooze_alarm(int alarm)
     Serial.println(snoozed_alarm[1]);
 }
 
-void check_temp()
+void check_temp() // Checking Temperature and Humidity
 {
     TempAndHumidity data = dhtSensor.getTempAndHumidity();
     bool all_good = true;

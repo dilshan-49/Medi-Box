@@ -32,7 +32,7 @@
 
 #define UTC_OFFSET_DST 0
 
-// Variables
+// Ringing tone notes
 extern int n_notes;
 extern int C;
 extern int D;
@@ -44,6 +44,7 @@ extern int B;
 extern int C_H;
 extern int notes[];
 
+// time Variables
 extern int UTC_OFFSET;
 
 extern int days;
@@ -52,28 +53,18 @@ extern int minutes;
 extern int seconds;
 extern String weekday;
 
+// alarm Variables
 extern bool alarm_enabled[];
 extern int n_alarms;
 extern int alarm_hours[];
 extern int alarm_minutes[];
 extern bool alarm_triggered[];
 
-extern unsigned long timeNow;
-extern unsigned long timeLast;
-
-extern volatile bool up_pressed;
-extern volatile bool down_pressed;
-extern volatile bool select_pressed;
-extern volatile bool back_pressed;
-
-extern int current_mode;
-extern int max_modes;
-extern String options[];
-
+// Other Peripherals
 extern DHTesp dhtSensor;
 extern Adafruit_SSD1306 display;
 
-// basic Functions
+// Main Functions
 void setup_all();
 void setup_display();
 void print_line(String text, int text_size, int row, int column);

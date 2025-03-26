@@ -20,20 +20,14 @@ int seconds = 0;
 
 bool alarm_enabled[] = {true, true};
 int n_alarms = 2;
-int alarm_hours[] = {1, 0};
+int alarm_hours[] = {0, 0};
 int alarm_minutes[] = {0, 0};
 bool alarm_triggered[] = {false, false};
 
-unsigned long timeNow = 0;
-unsigned long timeLast = 0;
-
-int current_mode = 0;
-int max_modes = 4;
-String options[] = {"1 - Set Time Zone", "2 - Set Alarm 1", "3 - Set Alarm 2", "4 - View Alarms"};
 DHTesp dhtSensor;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-void setup_all()
+void setup_all() // Setting up Pins and Sensors
 {
     Serial.begin(9600);
 
@@ -51,7 +45,7 @@ void setup_all()
     Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 }
 
-void setup_display()
+void setup_display() // setup oled display
 {
     if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
     {
@@ -64,7 +58,7 @@ void setup_display()
     display.clearDisplay(); // Clear the buffer
 }
 
-void print_line(String text, int text_size, int row, int column)
+void print_line(String text, int text_size, int row, int column) // Function to write messages to display
 {
     display.setTextSize(text_size); // Normal 1:1 pixel scale
     display.setTextColor(SSD1306_WHITE);
@@ -73,7 +67,7 @@ void print_line(String text, int text_size, int row, int column)
     display.display();
 }
 
-void update_time()
+void update_time() // Function to Update time variables using RTC
 {
     struct tm timeinfo;
     getLocalTime(&timeinfo);

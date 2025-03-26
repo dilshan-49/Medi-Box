@@ -6,6 +6,10 @@
 int zone_minutes = 0;
 int zone_hours = 0;
 
+int current_mode = 0;
+int max_modes = 4;
+String options[] = {"1. Set Time Zone", "2. Set Alarm 1", "3. Set Alarm 2", "4. View Alarms"};
+
 // Functions
 
 int wait_for_button_press()
@@ -60,7 +64,7 @@ void go_to_menu()
         {
             Serial.println(current_mode);
             delay(200);
-            run_mode(current_mode);
+            open_menu(current_mode);
         }
         else if (pressed == BUTTON_BACK)
         {
@@ -72,7 +76,7 @@ void go_to_menu()
     }
 }
 
-void run_mode(int mode)
+void open_menu(int mode) // Open menu selected by User
 {
     if (mode == 0)
     {
@@ -93,7 +97,7 @@ void run_mode(int mode)
     }
 }
 
-void set_time_zone()
+void set_time_zone() // Change the Device time by using timezone input by user
 {
     int temp_hour = zone_hours;
     while (true)
@@ -107,14 +111,14 @@ void set_time_zone()
         {
             temp_hour += 1;
             if (temp_hour > 12)
-                temp_hour = -12; // Wrap around to -12 if it exceeds +12
+                temp_hour = -12;
             delay(200);
         }
         else if (pressed == BUTTON_DOWN)
         {
             temp_hour -= 1;
             if (temp_hour < -12)
-                temp_hour = 12; // Wrap around to +12 if it goes below -12
+                temp_hour = 12;
             delay(200);
         }
         else if (pressed == BUTTON_SELECT)
@@ -168,13 +172,13 @@ void set_time_zone()
     }
     UTC_OFFSET = zone_hours * 3600 + zone_minutes * 60;
     configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
-    //  update_time();  /////////////////////////////////////////////////////////////////////////////////////
+    update_time();
     display.clearDisplay();
     print_line("Time Zone Set", 2, 0, 2);
     delay(1000);
 }
 
-void set_alarm(int alarm)
+void set_alarm(int alarm) // Setting up Alarm
 {
     int temp_hour = alarm_hours[alarm];
     while (true)
@@ -250,7 +254,7 @@ void set_alarm(int alarm)
     delay(1000);
 }
 
-void view_alarms()
+void view_alarms() // View and Enable or Disable existing alarms
 {
     int i = 0;
     display.clearDisplay();
