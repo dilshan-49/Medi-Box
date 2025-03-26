@@ -1,6 +1,6 @@
 
 #include <baseFunctions.h>
-
+#include <menuControl.h>
 #include <WiFi.h>
 
 void setup()
@@ -23,12 +23,16 @@ void setup()
   print_line("Connected to WiFi", 2, 0, 0);
 
   configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
+  update_time();
   display.clearDisplay();
+  delay(500);
 }
 
 void loop()
 {
-  update_time_with_check_alarm();
+  update_time();
+  print_time_now();
+  check_alarm();
   if (alarm_enabled[0])
     print_line("Alm 1:On", 1, 40, 0);
   else

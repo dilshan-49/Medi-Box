@@ -70,3 +70,27 @@ void print_line(String text, int text_size, int row, int column)
     display.println(text);
     display.display();
 }
+
+void update_time()
+{
+    struct tm timeinfo;
+    getLocalTime(&timeinfo);
+
+    char days_str[8];
+    char hours_str[8];
+    char min_str[8];
+    char sec_str[8];
+    char day_of_week[4];
+
+    strftime(days_str, 8, "%d", &timeinfo);
+    strftime(sec_str, 8, "%S", &timeinfo);
+    strftime(hours_str, 8, "%H", &timeinfo);
+    strftime(min_str, 8, "%M", &timeinfo);
+    strftime(day_of_week, 4, "%a", &timeinfo);
+
+    hours = atoi(hours_str);
+    minutes = atoi(min_str);
+    seconds = atoi(sec_str);
+    days = atoi(days_str);
+    weekday = String(day_of_week);
+}

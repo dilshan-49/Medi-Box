@@ -77,5 +77,6 @@ extern Adafruit_SSD1306 display;
 void setup_all();
 void setup_display();
 void print_line(String text, int text_size, int row, int column);
+void update_time();
 
 #endif

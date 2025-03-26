@@ -4,16 +4,9 @@
 #include <config.h>
 
 void print_time_now();
-void update_time();
-void update_time_with_check_alarm();
+void check_alarm();
 void ring_alarm(int alarm);
-int wait_for_button_press();
-void go_to_menu();
-void run_mode(int mode);
-void set_time_zone();
-void set_alarm(int alarm);
 void check_temp();
 void snooze_alarm(int alarm);
-void view_alarms();
 
 #endif
