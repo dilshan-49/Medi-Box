@@ -18,49 +18,20 @@ int hours = 0;
 int minutes = 0;
 int seconds = 0;
 
-bool alarm_enabled = false;
+bool alarm_enabled[] = {true, true};
 int n_alarms = 2;
 int alarm_hours[] = {0, 0};
-int alarm_minutes[] = {1, 10};
+int alarm_minutes[] = {0, 0};
 bool alarm_triggered[] = {false, false};
-
-volatile bool up_pressed = false;
-volatile bool down_pressed = false;
-volatile bool select_pressed = false;
-volatile bool back_pressed = false;
 
 unsigned long timeNow = 0;
 unsigned long timeLast = 0;
 
 int current_mode = 0;
 int max_modes = 4;
-String options[] = {"1 - Set Time Zone", "2 - Set Alarm 1", "3 - Set Alarm 2", "4 - Remove Alarm"};
+String options[] = {"1 - Set Time Zone", "2 - Set Alarm 1", "3 - Set Alarm 2", "4 - View Alarms"};
 DHTesp dhtSensor;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
-void handle_up()
-{
-    up_pressed = true;
-    Serial.println("UP PRESSED");
-}
-
-void handle_down()
-{
-    down_pressed = true;
-    Serial.println("DOWN PRESSED");
-}
-
-void handle_select()
-{
-    select_pressed = true;
-    Serial.println("SELECT PRESSED");
-}
-
-void handle_back()
-{
-    back_pressed = true;
-    Serial.println("BACK PRESSED");
-}
 
 void setup_all()
 {
@@ -74,21 +45,8 @@ void setup_all()
     pinMode(BUTTON_BACK, INPUT);
     pinMode(BUTTON_DOWN, INPUT);
 
-    // attachInterrupt(digitalPinToInterrupt(BUTTON_UP), handle_up, FALLING);
-    // attachInterrupt(digitalPinToInterrupt(BUTTON_DOWN), handle_down, FALLING);
-    // attachInterrupt(digitalPinToInterrupt(BUTTON_SELECT), handle_select, FALLING);
-    // attachInterrupt(digitalPinToInterrupt(BUTTON_BACK), handle_back, FALLING);
-
     dhtSensor.setup(DHTPIN, DHTesp::DHT22);
     Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-}
-
-void reset_buttons()
-{
-    up_pressed = false;
-    down_pressed = false;
-    select_pressed = false;
-    back_pressed = false;
 }
 
 void setup_display()

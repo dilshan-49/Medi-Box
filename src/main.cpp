@@ -1,5 +1,6 @@
-#include <config.h>
+
 #include <baseFunctions.h>
+
 #include <WiFi.h>
 
 void setup()
@@ -22,16 +23,26 @@ void setup()
   print_line("Connected to WiFi", 2, 0, 0);
 
   configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
-  reset_buttons();
+  display.clearDisplay();
 }
 
 void loop()
 {
   update_time_with_check_alarm();
+  if (alarm_enabled[0])
+    print_line("Alm 1:On", 1, 40, 0);
+  else
+    print_line("Alm 1:Off", 1, 40, 0);
+
+  if (alarm_enabled[1])
+    print_line("Alm 2:On", 1, 40, 60);
+  else
+    print_line("Alm 2:Off", 1, 40, 60);
+
   if (digitalRead(BUTTON_BACK) == LOW)
   {
     delay(1000);
-    reset_buttons();
+
     Serial.println("Menu");
     go_to_menu();
   }

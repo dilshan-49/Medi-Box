@@ -16,14 +16,14 @@
 #define SCREEN_ADDRESS 0x3C
 
 // Button pins
-#define BUTTON_UP 20
-#define BUTTON_DOWN 21
-#define BUTTON_SELECT 18
-#define BUTTON_BACK 19
+#define BUTTON_UP 40
+#define BUTTON_DOWN 39
+#define BUTTON_SELECT 42
+#define BUTTON_BACK 41
 
 // Sensor and other Pins
-#define DHTPIN 14
-#define BUZZER 1
+#define DHTPIN 15
+#define BUZZER 37
 #define LED_1 35
 #define LED_2 36
 
@@ -50,8 +50,9 @@ extern int days;
 extern int hours;
 extern int minutes;
 extern int seconds;
+extern String weekday;
 
-extern bool alarm_enabled;
+extern bool alarm_enabled[];
 extern int n_alarms;
 extern int alarm_hours[];
 extern int alarm_minutes[];
@@ -76,5 +77,5 @@ extern Adafruit_SSD1306 display;
 void setup_all();
 void setup_display();
 void print_line(String text, int text_size, int row, int column);
-void reset_buttons();
-#endif // CONFIG_H
+
+#endif
