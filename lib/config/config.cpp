@@ -20,8 +20,8 @@ int seconds = 0;
 
 bool alarm_enabled[] = {true, true};
 int n_alarms = 2;
-int alarm_hours[] = {0, 0};
-int alarm_minutes[] = {44, 0};
+int alarm_hours[] = {1, 0};
+int alarm_minutes[] = {0, 0};
 bool alarm_triggered[] = {false, false};
 
 unsigned long timeNow = 0;
@@ -44,6 +44,8 @@ void setup_all()
     pinMode(BUTTON_DOWN, INPUT);
     pinMode(BUTTON_BACK, INPUT);
     pinMode(BUTTON_DOWN, INPUT);
+    ledcSetup(0, 5000, 8);
+    ledcAttachPin(BUZZER, 0);
 
     dhtSensor.setup(DHTPIN, DHTesp::DHT22);
     Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);

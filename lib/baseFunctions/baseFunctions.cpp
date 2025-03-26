@@ -74,6 +74,7 @@ void ring_alarm(int alarm)
                 digitalWrite(LED_1, LOW);
                 return;
             }
+            noTone(BUZZER);
             tone(BUZZER, notes[i]);
             delay(500);
             noTone(BUZZER);

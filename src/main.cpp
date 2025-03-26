@@ -9,6 +9,7 @@ void setup()
 
   setup_display();
 
+
   print_line("Welcome to Medibox", 2, 0, 0);
   delay(3000);
 
