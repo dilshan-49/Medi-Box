@@ -34,14 +34,14 @@ void loop()
   print_time_now();
   check_alarm();
   if (alarm_enabled[0])
-    print_line("Alm 1:On", 1, 40, 0);
+    print_line("Alm 1:On", 1, 40, 2);
   else
-    print_line("Alm 1:Off", 1, 40, 0);
+    print_line("Alm 1:Off", 1, 40, 2);
 
   if (alarm_enabled[1])
-    print_line("Alm 2:On", 1, 40, 60);
+    print_line("Alm 2:On", 1, 40, 65);
   else
-    print_line("Alm 2:Off", 1, 40, 60);
+    print_line("Alm 2:Off", 1, 40, 65);
 
   if (digitalRead(BUTTON_BACK) == LOW)
   {

@@ -261,12 +261,13 @@ void view_alarms()
         if (alarm_enabled[i])
         {
             print_line("Alarm " + String(i + 1), 2, 0, 10);
-            print_line(String(alarm_hours[i]) + ":" + String(alarm_minutes[i]), 2, 20, 2);
+            print_line(String(alarm_hours[i]) + ":" + String(alarm_minutes[i]), 2, 20, 10);
             print_line("Press Select to Turn off", 1, 40, 0);
         }
         else
         {
-            print_line("Alarm " + String(i + 1) + ": OFF", 2, 0, 2);
+            print_line("Alarm " + String(i + 1), 2, 0, 2);
+            print_line(" OFF", 2, 20, 2);
             print_line("Press Select to Turn on", 1, 40, 0);
         }
 

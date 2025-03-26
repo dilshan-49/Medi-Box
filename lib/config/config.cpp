@@ -11,7 +11,7 @@ int B = 494;
 int C_H = 523;
 int notes[] = {C, D, E, F, G, A, B, C_H};
 
-int UTC_OFFSET = 0;
+int UTC_OFFSET = 19800;
 
 int days = 0;
 int hours = 0;
@@ -21,7 +21,7 @@ int seconds = 0;
 bool alarm_enabled[] = {true, true};
 int n_alarms = 2;
 int alarm_hours[] = {0, 0};
-int alarm_minutes[] = {0, 0};
+int alarm_minutes[] = {44, 0};
 bool alarm_triggered[] = {false, false};
 
 unsigned long timeNow = 0;
