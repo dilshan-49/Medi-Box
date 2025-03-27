@@ -1,6 +1,7 @@
-
-#include <baseFunctions.h>
+#include <config.h>
+#include <timeFunctions.h>
 #include <menuControl.h>
+
 #include <WiFi.h>
 
 void setup()
@@ -8,7 +9,6 @@ void setup()
   setup_all();
 
   setup_display();
-
 
   print_line("Welcome to Medibox", 2, 0, 0);
   delay(3000);

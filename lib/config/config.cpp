@@ -11,7 +11,7 @@ int B = 494;
 int C_H = 523;
 int notes[] = {C, D, E, F, G, A, B, C_H};
 
-int UTC_OFFSET = 19800;
+int UTC_OFFSET = 0;
 
 int days = 0;
 int hours = 0;

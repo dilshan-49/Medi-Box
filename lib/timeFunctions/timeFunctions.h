@@ -1,5 +1,5 @@
-#ifndef BASEFUNCTIONS_H
-#define BASEFUNCTIONS_H
+#ifndef TIMEFUNCTIONS_H
+#define TIMEFUNCTIONS_H
 
 #include <config.h>
 

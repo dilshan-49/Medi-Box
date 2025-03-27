@@ -1,4 +1,4 @@
-#include <baseFunctions.h>
+#include <timeFunctions.h>
 
 // local Variables
 
@@ -142,6 +142,7 @@ void check_temp() // Checking Temperature and Humidity
     }
     if (all_good)
     {
+        print_line("All Good!", 1, 55, 60);
         digitalWrite(LED_2, LOW);
     }
 }
