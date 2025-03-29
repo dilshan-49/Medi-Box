@@ -38,8 +38,6 @@ void setup_all() // Setting up Pins and Sensors
     pinMode(BUTTON_DOWN, INPUT);
     pinMode(BUTTON_BACK, INPUT);
     pinMode(BUTTON_DOWN, INPUT);
-    ledcSetup(0, 5000, 8);
-    ledcAttachPin(BUZZER, 0);
 
     dhtSensor.setup(DHTPIN, DHTesp::DHT22);
     Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
