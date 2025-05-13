@@ -1,6 +1,7 @@
 #include <config.h>
 #include <timeFunctions.h>
 #include <menuControl.h>
+#include <dashboardManager.h>
 
 #include <WiFi.h>
 
@@ -22,6 +23,14 @@ void setup()
   }
   display.clearDisplay();
   print_line("Connected to WiFi", 2, 0, 0);
+  delay(1000);
+
+
+  // Set up MQTT connection after WiFi is connected
+  print_line("Connecting to MQTT...", 1, 20, 0);
+  setupMQTT();
+  print_line("MQTT Connected!", 1, 30, 0);
+  delay(1000);
 
   configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
   update_time();
@@ -51,6 +60,11 @@ void loop()
     Serial.println("Menu");
     go_to_menu();
   }
+
+  
+  // Process MQTT communications
+  loopMQTT();
+  
 
   check_temp();
 }
