@@ -5,13 +5,14 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <config.h>
+#include <WiFiClientSecure.h>
 
 // MQTT Settings
-#define MQTT_SERVER "test.mosquitto.org"  // Public MQTT broker (replace with your broker)
-#define MQTT_PORT 1883
+#define MQTT_SERVER "medibox-8e58d6d2.a03.euc1.aws.hivemq.cloud"  // Public MQTT broker (replace with your broker)
+#define MQTT_PORT 8883
 #define MQTT_CLIENT_ID "MediBoxClient"
-#define MQTT_USERNAME ""  // If MQTT authentication is required
-#define MQTT_PASSWORD ""  // If MQTT authentication is required
+#define MQTT_USERNAME "medibox"  // If MQTT authentication is required
+#define MQTT_PASSWORD "Medibox1"  // If MQTT authentication is required
 
 // MQTT Topics
 #define TOPIC_TEMPERATURE "medibox/temp"
@@ -33,9 +34,8 @@ void setupMQTT();
 void reconnectMQTT();
 void handleMQTTCallback(char* topic, byte* payload, unsigned int length);
 void publishTemperatureAndHumidity(float temperature, float humidity);
-void publishTime(int hours, int minutes, int seconds);
-void publishLightLevel(int lightValue);
-void processMQTTCommand(const char* command);
+void publishLightLevel(float lightValue);
+void publishServoAngle(int angle);
 void loopMQTT();
 
 #endif 

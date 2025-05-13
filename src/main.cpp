@@ -27,9 +27,9 @@ void setup()
 
 
   // Set up MQTT connection after WiFi is connected
-  print_line("Connecting to MQTT...", 1, 20, 0);
+  Serial.println("Connecting to MQTT...");
   setupMQTT();
-  print_line("MQTT Connected!", 1, 30, 0);
+  Serial.println("MQTT Connected!");
   delay(1000);
 
   configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
@@ -61,10 +61,12 @@ void loop()
     go_to_menu();
   }
 
-  
+
   // Process MQTT communications
   loopMQTT();
   
 
   check_temp();
+
+  autoAdjustWindow();
 }

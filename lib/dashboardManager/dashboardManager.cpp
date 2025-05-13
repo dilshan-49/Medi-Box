@@ -1,7 +1,7 @@
 #include <dashboardManager.h>
 
 // Create WiFi and MQTT client instances
-WiFiClient espClient;
+WiFiClientSecure espClient;
 PubSubClient mqttClient(espClient);
 
 // Buffer for publishing messages
@@ -9,6 +9,10 @@ char mqttBuffer[100];
 int LDR_sampletime = 5;
 int LDR_updatetime = 120;
 int LDR_samplecount = 0;
+
+int theta = 30;
+float gamma_factor = 0.75;
+float med_temp = 30.0;
 
 
 
@@ -28,26 +32,38 @@ void handleMQTTCallback(char* topic, byte* payload, unsigned int length) {
   
   // Process servo control commands
   if (strcmp(topic, TOPIC_UPDATE_TIME) == 0) {
-    LDR_updatetime = atoi(message);
-    LDR_updatetime = LDR_updatetime * 60;
+    float _ = atof(message);
+    LDR_updatetime = int(_ * 60);
     Serial.print("LDR update time set to: ");
     Serial.println(LDR_updatetime);
   }
 
   if (strcmp(topic, TOPIC_SAMPLE_TIME) == 0) {
     LDR_sampletime = atoi(message);
-    LDR_sampletime = LDR_sampletime * 60;
     Serial.print("LDR sample time set to: ");
     Serial.println(LDR_sampletime);
   }
 
-  if (strcmp(topic, TOPIC_SAMPLE_TIME) == 0) {
-    LDR_samplecount = atoi(message);
-    Serial.print("LDR sample count set to: ");
-    Serial.println(LDR_samplecount);
+  if (strcmp(topic, TOPIC_THETA) == 0) {
+    theta = atoi(message);
+    Serial.print("Theta set to: ");
+    Serial.println(theta);
+    
   }
 
+  if (strcmp(topic, TOPIC_GAMMA) == 0) {
+    gamma_factor = atof(message);
+    Serial.print("Gamma set to: ");
+    Serial.println(gamma_factor);
+    
+  }
 
+  if (strcmp(topic, TOPIC_MED_TEMP) == 0) {
+    med_temp = atof(message);
+    Serial.print("Medibox temperature set to: ");
+    Serial.println(med_temp);
+    
+  }
 
 }
 
@@ -63,13 +79,12 @@ void setupMQTT() {
   // Try to connect to MQTT broker
   reconnectMQTT();
   
-  // Publish initial status
-  publishMediboxStatus("online");
   publishLightLevel(readLDR());
 }
 
 // Reconnect to MQTT broker if connection is lost
 void reconnectMQTT() {
+  espClient.setInsecure();
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -78,15 +93,18 @@ void reconnectMQTT() {
     if (mqttClient.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
       Serial.println("connected");
       
-      // Subscribe to command topic to receive commands from the dashboard
-      mqttClient.subscribe(TOPIC_SERVO_CONTROL);
+      // Subscribe to Servo control topics
+      mqttClient.subscribe(TOPIC_GAMMA);
+      mqttClient.subscribe(TOPIC_MED_TEMP);
+      mqttClient.subscribe(TOPIC_THETA);
       
-      // Subscribe to servo control topic
-      mqttClient.subscribe(TOPIC_SERVO_CONTROL);
+      // Subscribe to LDR topics
+      mqttClient.subscribe(TOPIC_SAMPLE_TIME);
+      mqttClient.subscribe(TOPIC_UPDATE_TIME);
       
-      // Notify that Medibox is online
-      publishMediboxStatus("online");
-    } else {
+    } 
+    
+    else {
       Serial.print("failed, rc=");
       Serial.print(mqttClient.state());
       Serial.println(" try again in 5 seconds");
@@ -106,49 +124,18 @@ void publishTemperatureAndHumidity(float temperature, float humidity) {
   mqttClient.publish(TOPIC_HUMIDITY, mqttBuffer);
 }
 
-
-void publishTime(int hours, int minutes, int seconds) {
-  snprintf(mqttBuffer, sizeof(mqttBuffer), "{\"hours\": %d, \"minutes\": %d, \"seconds\": %d}",
-    hours, minutes, seconds);
-    
-  mqttClient.publish(TOPIC_TIME, mqttBuffer);
-}
-
 // Publish LDR light level to dashboard
-void publishLightLevel(int lightValue) {
-  snprintf(mqttBuffer, sizeof(mqttBuffer), "%d", lightValue);
+void publishLightLevel(float lightValue) {
+  snprintf(mqttBuffer, sizeof(mqttBuffer), "%.2f", lightValue);
   mqttClient.publish(TOPIC_LIGHT_LEVEL, mqttBuffer);
 }
 
-// Process commands received from dashboard
-void processMQTTCommand(const char* command) {
-  // Process different commands
-  if (strcmp(command, "toggle_alarm1") == 0) {
-    alarm_enabled[0] = !alarm_enabled[0];
-    publishAlarmStatus(alarm_triggered[0], 1);
-  } 
-  else if (strcmp(command, "toggle_alarm2") == 0) {
-    alarm_enabled[1] = !alarm_enabled[1];
-    publishAlarmStatus(alarm_triggered[1], 2);
-  }
-  else if (strcmp(command, "auto_light_control_on") == 0) {
-    controlBoxBasedOnLight(true);
-  }
-  else if (strcmp(command, "auto_light_control_off") == 0) {
-    // Just disable auto control, don't change box position
-    // The box will need manual control via MQTT or buttons
-  }
-  else if (strcmp(command, "request_status") == 0) {
-    // Send all status information to dashboard
-    TempAndHumidity data = dhtSensor.getTempAndHumidity();
-    publishTemperatureAndHumidity(data.temperature, data.humidity);
-    publishAlarmStatus(alarm_triggered[0], 1);
-    publishAlarmStatus(alarm_triggered[1], 2);
-    publishTime(hours, minutes, seconds);
-    publishLightLevel(readLDR());
-  }
-  // Add more command handlers as needed
+// Publish servo angle to dashboard
+void publishServoAngle(int angle) {
+  snprintf(mqttBuffer, sizeof(mqttBuffer), "%d", angle);
+  mqttClient.publish(TOPIC_SERVO_CONTROL, mqttBuffer);
 }
+
 
 // Main loop function for MQTT - call this in your main loop
 void loopMQTT() {
@@ -164,7 +151,7 @@ void loopMQTT() {
   static unsigned long lastTempUpdate = 0;
   static unsigned long lastLDRUpdate = 0;
   static unsigned long lastLDRSample = 0;
-  static int lightLevel = 0;
+  static float lightLevel = 0;
   unsigned long currentMillis = millis();
   
   // Update temperature and time every 1 seconds
@@ -175,6 +162,8 @@ void loopMQTT() {
     TempAndHumidity data = dhtSensor.getTempAndHumidity();
     publishTemperatureAndHumidity(data.temperature, data.humidity);
     
+    int angle = mediBoxServo.read();
+    publishServoAngle(angle);
   }
   
 
