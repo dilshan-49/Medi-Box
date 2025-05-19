@@ -126,15 +126,7 @@ float readLDR()
 
 
 // Sliding Window Servo Control with Equation
-/**
- * Calculates servo angle based on temperature and humidity using an equation
- * The equation maps temperature from TEMPERATURE_MIN to TEMPERATURE_MAX to a position value
- * and adds an additional factor if humidity is above the threshold
- * 
- * @param temperature Current temperature in Celsius
- * @param humidity Current humidity percentage
- * @return Calculated servo angle
- */
+
 int calculateServoAngle(float temperature, float light_intensity) {
     
     float log_time = log((float)LDR_sampletime/(float)LDR_updatetime);
@@ -148,9 +140,7 @@ int calculateServoAngle(float temperature, float light_intensity) {
 }
 
 
-/**
- * Auto-adjust window based on current temperature and humidity readings
- */
+// Auto-adjust window based on current temperature and humidity readings
 void autoAdjustWindow() {
     // Ensure we have updated temperature and humidity values
     float temp = dhtSensor.getTemperature();

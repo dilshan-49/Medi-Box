@@ -37,17 +37,9 @@
 
 
 // Servo Positions
-#define SERVO_CLOSED_POS 0
-#define SERVO_OPEN_POS 90
 #define SERVO_MIN_ANGLE 0
 #define SERVO_MAX_ANGLE 180
 
-// Window Parameters
-#define WINDOW_MIN_POSITION 0    // Minimum window position (closed)
-#define WINDOW_MAX_POSITION 100  // Maximum window position (fully open)
-#define TEMPERATURE_MIN 22.0    // Minimum temperature for window control
-#define TEMPERATURE_MAX 30.0    // Maximum temperature for window control
-#define HUMIDITY_THRESHOLD 65.0 // Humidity threshold for additional window opening
 
 // Ringing tone notes
 extern int n_notes;
